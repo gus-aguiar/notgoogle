@@ -24,11 +24,9 @@ def remove(instance):
     if instance.is_empty():
         sys.stdout.write("Não há elementos\n")
         return None
-    sys.stdout.write(
-        f"Arquivo {instance.search(0)['nome_do_arquivo']} removido com sucesso\n"
-    )
+    instance_name = instance.search(0)["nome_do_arquivo"]
+    sys.stdout.write(f"Arquivo {instance_name} removido com sucesso\n")
     instance.dequeue()
-    pass
 
 
 def file_metadata(instance, position):
