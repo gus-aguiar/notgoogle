@@ -16,4 +16,15 @@ def exists_word(word, instance):
 
 
 def search_by_word(word, instance):
-    """Aqui irá sua implementação"""
+    linhas_completo = []
+    for i in range(len(instance)):
+        for j in range(len(instance.search(i)["linhas_do_arquivo"])):
+            line = instance.search(i)["linhas_do_arquivo"][j]
+            if word.lower() in line.lower():
+                linhas_completo.append({"linha": j + 1, "conteudo": line})
+    dict = {
+        "palavra": word,
+        "arquivo": instance.search(i)["nome_do_arquivo"],
+        "ocorrencias": linhas_completo,
+    }
+    return [dict] if len(linhas_completo) > 0 else []
