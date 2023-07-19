@@ -3,55 +3,46 @@ from ting_file_management.priority_queue import PriorityQueue
 
 
 def test_basic_priority_queueing():
-    def test_enqueue_high_priority():
-        queue = PriorityQueue()
+    # Arrange
+    priority_queue = PriorityQueue()
 
-        data = {"qtd_linhas": 4, "nome_arquivo": "file1.txt"}
-        queue.enqueue(data)
+    high_priority_file = {
+        "nome_do_arquivo": "high_priority.txt",
+        "qtd_linhas": 6,
+        "linhas_do_arquivo": [],
+    }
 
-        assert len(queue.high_priority) == 1
-        assert len(queue.regular_priority) == 0
+    regular_priority_file = {
+        "nome_do_arquivo": "regular_priority.txt",
+        "qtd_linhas": 4,
+        "linhas_do_arquivo": [],
+    }
 
-    def test_enqueue_regular_priority():
-        queue = PriorityQueue()
-        data = {"qtd_linhas": 6, "nome_arquivo": "file2.txt"}
-        queue.enqueue(data)
+    low_priority_file = {
+        "nome_do_arquivo": "low_priority.txt",
+        "qtd_linhas": 2,
+        "linhas_do_arquivo": [],
+    }
 
-        assert len(queue.high_priority) == 0
-        assert len(queue.regular_priority) == 1
+    # Act
+    priority_queue.enqueue(high_priority_file)
+    priority_queue.enqueue(regular_priority_file)
+    priority_queue.enqueue(low_priority_file)
 
-    def test_dequeue_high_priority():
-        queue = PriorityQueue()
-        high_priority_data = {"qtd_linhas": 3, "nome_arquivo": "file3.txt"}
-        regular_priority_data = {"qtd_linhas": 7, "nome_arquivo": "file4.txt"}
+    # Assert
+    assert len(priority_queue) == 3
+    assert len(priority_queue.high_priority) == 2
+    assert len(priority_queue.regular_priority) == 1
 
-        queue.enqueue(high_priority_data)
-        queue.enqueue(regular_priority_data)
+    assert priority_queue.search(0) == regular_priority_file
+    assert priority_queue.search(1) == low_priority_file
+    assert priority_queue.search(2) == high_priority_file
 
-        dequeued_item = queue.dequeue()
+    assert priority_queue.dequeue() == regular_priority_file
+    assert priority_queue.dequeue() == low_priority_file
+    assert priority_queue.dequeue() == high_priority_file
 
-        assert dequeued_item == high_priority_data
-        assert len(queue.high_priority) == 0
-        assert len(queue.regular_priority) == 1
+    assert len(priority_queue) == 0
 
-    def test_dequeue_regular_priority():
-        queue = PriorityQueue()
-        high_priority_data = {"qtd_linhas": 3, "nome_arquivo": "file5.txt"}
-        regular_priority_data = {"qtd_linhas": 7, "nome_arquivo": "file6.txt"}
-
-        queue.enqueue(high_priority_data)
-        queue.enqueue(regular_priority_data)
-
-        dequeued_item = queue.dequeue()
-
-        assert dequeued_item == high_priority_data
-        assert len(queue.high_priority) == 0
-        assert len(queue.regular_priority) == 1
-
-        queue.dequeue(high_priority_data)
-        queue.dequeue(regular_priority_data)
-
-        assert len(queue.high_priority) == 0
-        assert len(queue.regular_priority) == 0
-        with pytest.raises(IndexError):
-            queue.search(99)
+    with pytest.raises(IndexError):
+        priority_queue.search(99)
